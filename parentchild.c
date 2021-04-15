@@ -1,6 +1,7 @@
 #include <stdlib.h> /*needed to define exit()*/
 #include <unistd.h> /*needed for fork()and getpid()*/
 #include <stdio.h> /*needed for printf()*/
+#include <sys/wait.h>
 
 int main(int argc, char **argv){
 int pid; /*process ID*/
@@ -16,7 +17,10 @@ break;
 
 case -1: /*something went wrong*/
 perror("fork");
+
+wait(NULL);
 exit(1);
 }
+
 exit(0);
 }
