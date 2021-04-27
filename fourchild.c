@@ -1,70 +1,74 @@
-#include <stdlib.h>	/* to define exit() */
-#include <unistd.h>	/* to use fork() and getpid() */
-#include <stdio.h>	/* to use printf() */
+#include <stdlib.h>	/* needed to define exit() */
+#include <unistd.h>	/* needed for fork() and getpid() */
+#include <stdio.h>	/* needed for printf() */
 #include <sys/wait.h>
 
-void taskParent()
+void parentTask()
 {
- printf("Job is done\n");
+ printf("Job is done!!\n");
 }
 
 int main(int argc, char **argv) 
 {
-int pid;	/* PID */
-char child_1[10];
-char child_2[10];
-char child_3[10];
-char child_4[10];
-
-switch (pid = fork())
-{
-case 0:		/* fork always return 0 if child */
-	printf("First child's name: ");
-	scanf("%[^\n]%*c",child_1);
-	printf("Second child's name: ");
-	scanf("%[^\n]%*c",child_2);
-	printf("Third child's name: ");
-	scanf("%[^\n]%*c",child_3);
-	printf("Fourth child's name: ");
-	scanf("%[^\n]%*c",child_4);
-
-	for(int i = 0; i <= 3; i++)
+	int pid;	/* process ID */
+	char child1[20];
+	char child2[20];
+	char child3[20];
+	char child4[20];
+	
+	switch (pid = fork())
 	{
-		if(i == 0){
-		printf("First child: My name is %s\n", child_1);
-		i = i+1;
-		}
+		case 0:		/* a fork returns 0 to the child */
+			printf("What your first  child's name?\n");
+			scanf("%[^\n]%*c",child1);
+			printf("What your second child's name?\n");
+			scanf("%[^\n]%*c",child2);
+			printf("What your third  child's name?\n");
+			scanf("%[^\n]%*c",child3);
+			printf("What your fourth child's name?\n");
+			scanf("%[^\n]%*c",child4);
 
-		else if(i == 1){
-		printf("Second child: My name is  %s\n", child_2);
-		i = i + 1;
-		}
+		for(int i = 0; i <= 3; i++)
+			{
+			if(i == 0)
+				{
+				printf("I am the first  child: %s\n", child1);
+				i = i+1;
+				}
 
-		else if(i == 2){
-		printf("Third child: My name is  %s\n", child_3);
-		i = i + 1;
-		}
+				if(i == 1)
+					{
+					printf("I am the second child: %s\n", child2);
+					i = i + 1;
+					}
+					if(i == 2)
+						{
+						printf("I am the third  child: %s\n", child3);
+						i = i + 1;
+						}
+						if (i == 3)
+							{
+							printf("I am the fourth child: %s\n", child4);
+							i = i + 1;
+							}
+							else
+								{
+								perror("fork");
+								return(1);
+								}
+			}
+			break;
 
-		else if(i == 3){
-		printf("Fourth child: My name is  %s\n", child_4);
-		i = i + 1;
-		}
+		default:	/* a fork returns a pid to the parent */
+			wait(NULL);
+			printf("As a parent:" );
+			parentTask();
+			break;
 
-		else{
-		perror("fork");
-		return(1);
-		}
+		case -1:	/* something went wrong */
+			perror("fork");
+		exit(1);
 	}
-	break;
-
-default:	/* fork to return pid of parent */
-	wait(NULL);
-	taskParent();
-	break;
-
-case -1:	/* wrong value */
-	perror("fork");
-	exit(1);
-	}
-exit(0);
+	exit(0);
 }
+
